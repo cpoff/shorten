@@ -1,8 +1,7 @@
 extends layout
 
 block content
-	h3= url[11].shortened 
-		div.details
-			p Target URL: url.target
-			p Number of times clicked: #{ clicks }
-
+	h3
+		a(href="http://"+url[11].target)= url[11].shortened
+		div
+			p= url[11].target

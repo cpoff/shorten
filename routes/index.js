@@ -27,7 +27,7 @@ console.log("howdy")
   							shorten_url.find().toArray(function(err, results) {
      						 console.dir(results);
      						
-    						response.redirect('/post/' + shortKey);
+    						response.redirect(shortKey);
   });
 });
 
@@ -35,11 +35,23 @@ console.log("howdy")
 });  
 
 
-router.get('/post/:shortUrl', function(request, response){
+router.get('/:shortUrl', function(request, response){
+var countClicks = function() { 
+ db.shorten_url.find(
+ {"shortened": request.param.shortUrl},
+ function(err, results) {
+   console.log(results);
+ }//closes function
+ )};//closes .find
+
+ //   db.shorten_url.update(
+ //   {$inc {"clicks": 1}
+ //   })//closes .update
+ // };
 console.log('here')	// MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, db) {
   var collection = db.collection('shorten_url')
   var    shortUrl = request.params.shortKey;
-  collection.find({}).toArray(function(err, url) {
+  collection.find().toArray(function(err, url) {
   	console.log(err)
   	console.log(url)
     response.render('post', {"url": url});
