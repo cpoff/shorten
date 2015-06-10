@@ -4,22 +4,25 @@ var MongoClient = require('mongodb').MongoClient;
 var uuid = require('node-uuid');
 var target = request.body.URL
 
+/*Connects w/MongoDB server*/
 MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, db) {
   if (err) {
     throw err;
   }//closes if
 })//closes MongoClient.connect
 
-  /* GET home page. */
+/* GET home page. */
 router.get('/', function(request, responds, next) {
   response.render('index', { title: 'Express' });
 });
 
+/**/
 router.get('/', function(request, response) {
   response.render('index', {});
   // index.jade needs a form to submit a URL for shortening
 });
 
+/*Redirects to the page*/
 router.post('/', function(request, response) {
   var shortKey = uuid.v4();
 
@@ -46,7 +49,7 @@ router.get('/info/:shortUrl', function(request, response) {
     db.shorten_url.update(
     {$inc {"clicks": 1}
     })//closes .update
-    
+
   var collection = db.collection('urls'),
       shortUrl = request.params.shortUrl;
   collection.find({'shortened': shortUrl}, function(err, url) {
@@ -63,3 +66,8 @@ router.get('/:shortUrl', function(request, response) {
 });
 
 module.exports = router;
+
+
+
+
+
