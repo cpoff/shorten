@@ -1,7 +1,8 @@
 extends layout
 
 block content
-	h3 Details for #{ shorturl }
+	h3 Details for #{ _id }
 		div.details
-			p Eventually we'll do clicks, etc. in subsequent updates.
+			p Target URL: #{ longUrl }
+			p Number of times clicked: #{ clicks }
 
