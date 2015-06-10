@@ -1,8 +1,8 @@
 extends layout
 
 block content
-	h3 Details for #{ _id }
+	h3= url[11].shortened 
 		div.details
-			p Target URL: #{ longUrl }
+			p Target URL: url.target
 			p Number of times clicked: #{ clicks }
 
