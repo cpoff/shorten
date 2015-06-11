@@ -4,11 +4,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var MongoClient = require('mongodb').MongoClient;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+module.exports = app;
+
+MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, thisdb) {
+  if (err) {
+    throw err;
+  }//closes if err
+  app.set('database', thisdb);
+});//closes MongoClient
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
