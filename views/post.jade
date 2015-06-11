@@ -1,8 +1,9 @@
 extends layout
 
 block content
-	h3 Details for #{ _id }
-		div.details
-			p Target URL: #{ longUrl }
-			p Number of times clicked: #{ clicksTK }
-
+	h3
+		a(href='/goto/'+url.shortened, id="update")= url.shortened
+		div
+			p= url.target
+			p= url.clicks
+			P= url.last_click
