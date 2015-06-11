@@ -18,19 +18,30 @@ var shortKey = uuid.v4();
 var target= request.body.URL
 console.log("howdy")
 
-  var shorten_url =  db.collection('shorten_url')
-  shorten_url.insert({
+  var collection =  db.collection('shorten_url')
+  collection.find(
+        {'target': {$eq: target}},
+        { target: 1, shortened:1}
+        ).toArray(function(err,reply){
+          if (reply.length>0){
+            console.log(target)
+            console.log(reply)
+            response.redirect(reply[0].shortened);
+          }else{
+              collection.insert({
   						"shortened": shortKey,
   						"target": target,
   						"clicks": 8,
   						"last_click": "2015-01-13T16:42:00"}, function(err, docs) {
-  							shorten_url.find().toArray(function(err, results) {
+  							collection.find().toArray(function(err, results) {
      						 console.dir(results);
      						
     						response.redirect(shortKey);
-  });
-});
 
+                });
+              });
+          }
+        })
 
 });  
 
@@ -50,20 +61,20 @@ router.get('/:shortUrl', function(request, response){
  // };
 console.log('here')	// MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, db) {
   var collection = db.collection('shorten_url')
-  var shortKey = uuid.v4();
-  var    shortUrl = request.params.shortKey;
-  console.log(shortKey)
-  collection.find().toArray(function(err, url) {
+  // var shortKey = uuid.v4();
+  var    shortUrl = request.params.shortUrl;
+  console.log(shortUrl)
+  // collection.find().toArray(function(err, url) {
     collection.find(
-        {shortened: {$ne: shortKey}},
-        { target: 1}
+        {shortened: {$eq: shortUrl}},
+        { target: 1, shortened: 1}
         ).toArray(function(err, result){
           console.log(result)
-  	console.log(err)
-  	console.log(url)
-    response.render('post', {"url": url, "site": result});
+  	// console.log(err)
+  	// console.log(url)
+    response.render('post', {"url": result[0]});
   })
-      })
+      // })
 });
 });
 
