@@ -1,11 +1,7 @@
 extends layout
 
 block content
-
-  h1 Here is your shortened link!
     h3 Short Link: 
-      a(href="http://"+url[11].target)= url[11].shortened
+      a(href="http://"+url.target)= url.shortened
         div
-          p= url[11].target
-
-  p Number of clicks: #{ clicks }
+          p= url.target
