@@ -36,13 +36,13 @@ console.log("howdy")
 
 
 router.get('/:shortUrl', function(request, response){
-var countClicks = function() { 
- db.shorten_url.find(
- {"shortened": request.param.shortUrl},
- function(err, results) {
-   console.log(results);
- }//closes function
- )};//closes .find
+// var countClicks = function() { 
+//  db.shorten_url.find(
+//  {"shortened": request.param.shortUrl},
+//  function(err, results) {
+//    console.log(results);
+ // }//closes function
+ // )};//closes .find
 
  //   db.shorten_url.update(
  //   {$inc {"clicks": 1}
@@ -50,14 +50,30 @@ var countClicks = function() {
  // };
 console.log('here')	// MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, db) {
   var collection = db.collection('shorten_url')
+  var shortKey = uuid.v4();
   var    shortUrl = request.params.shortKey;
+  console.log(shortKey)
   collection.find().toArray(function(err, url) {
+    collection.find(
+        {shortened: {$ne: shortKey}},
+        { target: 1}
+        ).toArray(function(err, result){
+          console.log(result)
   	console.log(err)
   	console.log(url)
-    response.render('post', {"url": url});
+    response.render('post', {"url": url, "site": result});
   })
+      })
 });
 });
+
+// db.collection.find(
+// {shortened:shortKey },
+// {
+//   target: 1
+// }
+//   ).limit(1)
+
 
 
 module.exports = router;
