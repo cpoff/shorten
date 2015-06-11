@@ -5,7 +5,7 @@ var uuid = require('node-uuid');
 var MongoClient = require('mongodb').MongoClient;
 var longUrl;
 var clicks;
-
+var date = new Date()
 
 
 /* GET home page. */
@@ -31,8 +31,8 @@ console.log("howdy")
               collection.insert({
   						"shortened": shortKey,
   						"target": target,
-  						"clicks": 8,
-  						"last_click": "2015-01-13T16:42:00"}, function(err, docs) {
+  						"clicks": 0,
+  						"last_click": new Date()}, function(err, docs) {
   							collection.find().toArray(function(err, results) {
      						 console.dir(results);
      						
@@ -47,36 +47,54 @@ console.log("howdy")
 
 
 router.get('/:shortUrl', function(request, response){
-// var countClicks = function() { 
-//  db.shorten_url.find(
-//  {"shortened": request.param.shortUrl},
-//  function(err, results) {
-//    console.log(results);
- // }//closes function
- // )};//closes .find
-
- //   db.shorten_url.update(
- //   {$inc {"clicks": 1}
- //   })//closes .update
- // };
-console.log('here')	// MongoClient.connect('mongodb://127.0.0.1:27017/shorten', function(err, db) {
+console.log('here')	
   var collection = db.collection('shorten_url')
+
   // var shortKey = uuid.v4();
   var    shortUrl = request.params.shortUrl;
   console.log(shortUrl)
   // collection.find().toArray(function(err, url) {
-    collection.find(
+    
+           
+          collection.find(
         {shortened: {$eq: shortUrl}},
-        { target: 1, shortened: 1}
+        { target: 1, shortened: 1, clicks:1, last_click:1}
         ).toArray(function(err, result){
+            
           console.log(result)
-  	// console.log(err)
-  	// console.log(url)
+    // response.redirect("http://"+result[0].target)
     response.render('post', {"url": result[0]});
-  })
+          })
       // })
 });
+
+router.get('/goto/:shortUrl', function(request, response){
+    var collection = db.collection('shorten_url')
+
+  // var shortKey = uuid.v4();
+  var    shortUrl = request.params.shortUrl;
+  console.log(shortUrl)
+  // collection.find().toArray(function(err, url) {
+    collection.update(
+            {shortened: {$eq: shortUrl}},
+            {
+              $inc: {clicks: 1},
+              $set: {last_click: new Date()}
+            }
+              )
+           
+          collection.find(
+        {shortened: {$eq: shortUrl}},
+        { target: 1, shortened: 1, clicks:1, last_click:1}
+        ).toArray(function(err, result){
+          response.redirect("http://"+result[0].target)
+                  })
+
+})
+
 });
+
+
 
 // db.collection.find(
 // {shortened:shortKey },

@@ -2,6 +2,8 @@ extends layout
 
 block content
 	h3
-		a(href="http://"+url.target)= url.shortened
+		a(href='/goto/'+url.shortened, id="update")= url.shortened
 		div
 			p= url.target
+			p= url.clicks
+			P= url.last_click
